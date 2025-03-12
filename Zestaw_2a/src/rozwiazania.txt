@@ -1,0 +1,218 @@
+1. Zadania numer 6 oraz 9 z Zestawu 1 zrób na dwa sposoby (każde) — z użyciem pętli while/loop oraz z użyciem pętli for.
+
+6. Napisz program, który oblicza silnię dla danej liczby.
+
+fn main() {
+    let mut liczba: i32 = 5;
+    let mut wynik: i32 = 1;
+
+    while liczba > 1 {
+        wynik = wynik * liczba;
+        liczba -= 1;
+    }
+
+    println!("{wynik}");
+}
+
+fn main() {
+    let mut liczba: i32 = 5;
+    let mut wynik: i32 = 1;
+
+    loop {
+        if liczba <= 1 {
+            break; // Zatrzymujemy pętlę, gdy liczba <= 1
+        }
+
+        wynik *= liczba;
+        liczba -= 1;
+    }
+
+    println!("{wynik}");
+}
+
+fn main() {
+    let liczba: i32 = 5;
+    let mut wynik: i32 = 1;
+
+    for i in 1..=liczba {
+        wynik = wynik * i;
+    }
+
+    println!("{wynik}");
+}
+
+9. Napisz program, który znajduje wszystkie trójki pitagorejskie o wartościach nie większych niż dana.
+    Zakładamy, że 0 < a < b < c.
+
+fn main() {
+    let dana = 30;
+    let mut a = 1;
+
+    while a < dana {
+        let mut b = a + 1;
+
+        while b < dana {
+            let mut c = b + 1;
+
+            while c <= dana {
+                if a*a + b*b == c*c {
+                    println!("({a}, {b}, {c})");
+                }
+                c += 1;
+            }
+            b += 1;
+        }
+        a += 1;
+    }
+}
+
+fn main() {
+    let dana = 30;
+    let mut a = 1;
+
+    loop {
+        if a >= dana {
+            break;
+        }
+        let mut b = a + 1;
+
+        loop {
+            if b >= dana {
+                break;
+            }
+            let mut c = b + 1;
+
+            loop {
+                if c > dana {
+                    break;
+                }
+                if a*a + b*b == c*c {
+                    println!("({a}, {b}, {c})");
+                }
+                c += 1;
+            }
+            b += 1;
+        }
+        a += 1;
+    }
+}
+
+fn main() {
+    let dana = 30;
+
+    for c in 1..=dana {
+        for b in 1..c {
+            for a in 1..b {
+                if a*a + b*b == c*c {
+                    println!("({a}, {b}, {c})");
+                }
+            }
+        }
+    }
+}
+
+
+2. Przy założeniu, że mamy zdefiniowane dwie funkcje
+
+fn f(x: f64) -> f64
+fn fp(x: f64) -> f64
+(spełniające odpowiednie założenia; druga jest pochodną pierwszej) napisz funkcję
+
+fn met_newt(x0: f64, eps: f64, n: u128) -> f64
+realizującą znajdowanie przybliżonego miejsca zerowego metodą Newtona — w czterech wersjach:
+    - iteracyjnej z pętlą loop (z ewentualnymi break continue return);
+    - iteracyjnej z pętlą while (bez żadnych break continue return);
+    - rekurencyjnej;
+    - iteracyjnej z pętlą for (z ewentualnymi break continue return).
+
+------------------------------------------------------------------------------------------------------
+metoda Newtona
+    f               (x) = x^2 - 3x + 2
+    f' (pochodna)   (x) = 2x - 3
+
+    w każdym obrocie pętli x0:
+        x0' = x0 - (f(x0) / f'(x0))
+
+    n - maksynalna ilość iteracji
+    |x0' - x0| < E(epsilon)
+
+
+fn f(x: f64) -> f64 {
+    x*x - 3.0*x + 2.0;
+}
+fn fp(x: f64) -> f64 {
+    2.0*x - 3.0;
+}
+
+fn met_newt_loop(x0: f64, eps: f64, n: u128) -> f64 {
+    let mut x = x0;
+    let mut i = 0;
+
+    loop {
+        if fp(x) == 0.0 {
+            break;
+        }
+
+        let xp = x - f(x) / fp(x);
+
+        if (xp - x).abs() < eps || i >= n {
+            return xp;
+        }
+        x = xp;
+        i += 1;
+    }
+    x
+}
+
+fn met_newt_while(x0: f64, eps: f64, n: u128) -> f64 {
+    let mut x = x0;
+    let mut i = 0;
+    let mut xp = x - f(x) / fp(x);
+
+    while fp(x) != 0.0 && (xp - x).abs() >= eps && i < n {
+        x = xp;
+        xp = x - f(x) / fp(x);
+        i += 1;
+    }
+    xp
+}
+
+fn met_newt_rekurencja(x0: f64, eps: f64, n: u128) -> f64 {
+    if n == 0 || fp(x0).abs() < 0.0 {
+        return x0;
+    }
+
+    let xp = x0 - f(x0) / fp(x0);
+
+    if (xp - x0).abs() < eps {
+        xp
+    } else {
+        met_newt_rekurencja(xp, eps, n-1)
+    }
+}
+
+fn met_newt_for(x0: f64, eps: f64, n: u128) -> f64 {
+    let mut x = x0;
+
+    for _ in 0..n {
+        if fp(x) < 0.0 {
+            break;
+        }
+
+        let xp = x - f(x) / fp(x);
+
+        if (xp - x).abs() < eps {
+            return xp;
+        }
+        x = xp;
+    }
+    x
+}
+
+fn main() {
+    let x0 = 4.0;
+    let eps = 1.0;
+    let n = 4;
+
+    println!("{}", met_newt_loop(x0, eps, n));
+}
