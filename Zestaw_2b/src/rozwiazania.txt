@@ -1,0 +1,181 @@
+1/ Wyświetl tabelę widzialnych znaków ASCII wraz kodami (od 33 do 126).
+
+struct Ascii {
+    znak: char,
+    numer: u8
+}
+
+fn main() {
+    // let mut tablica = Vec::new();
+    let mut tablica = Vec::with_capacity(94); // alokacja na 94 znaki
+
+    for i in 33..=126 {
+        tablica.push(Ascii {znak: i as char, numer: i});
+    }
+
+    // for i in &tablica {
+    //     println!("Kod: {} | Znak: {}", i.numer, i.znak);
+    // }
+
+    // Wyświetlamy tabelę ASCII w 4 kolumnach dla lepszej czytelności
+    for (index, ascii) in tablica.iter().enumerate() {
+        print!("Kod: {:3} | Znak: {}  ", ascii.numer, ascii.znak);
+
+        if (index + 1) % 4 == 0 { // Co 4 elementy przechodzimy do nowej linii
+            println!();
+        }
+    }
+}
+
+
+2/ Napisz funkcję, która dla danego całkowitego dodatniego n
+ zwraca numer iteracji, w której osiągamy jedynkę w problemie Collatza (np. dla n=12
+ wynikiem jest 9
+).
+
+fn problem_collatza(n: u64) -> u64 {
+    if n == 1 {
+      0 // return 0;
+    } else if n % 2 == 0 {
+        1 + problem_collatza(n / 2) // return 1 + problem_collatza(n / 2);
+    } else {
+        1 + problem_collatza((3 * n) + 1) // return 1 + problem_collatza((3 * n) + 1);
+    }
+}
+
+fn main() {
+    let n = 12;
+    println!("{}", problem_collatza(n));
+}
+
+3/ Napisz funkcję, która odpowiada na pytanie, czy jej argument jest liczbą Armstronga.
+
+fn liczba_armstronga(a: u32) -> bool {
+    let mut wynik = 0;
+    let mut a_copy = a;
+
+    while a_copy != 0 {
+        let cyfra = a_copy % 10;
+        wynik += cyfra.pow(3);
+        a_copy /= 10;
+    }
+
+    wynik == a
+
+    // /\ to jest to samo ale po rustowemu 🦀
+    // if wynik == a {
+    //     true
+    // } else {
+    //     false
+    // }
+}
+
+fn main() {
+    let a = 153;
+    if liczba_armstronga(a) {
+        println!("liczba: {} jest liczbą Armstronga", a);
+    } else {
+        println!("liczba: {} nie jest Armstronga", a);
+    }
+}
+
+4/ Napisz funkcję, która odpowiada na pytanie, czy jej argument jest liczbą doskonałą.
+
+fn czy_liczba_doskonala(liczba: u32) -> bool {
+    let mut wynik = 0;
+
+    for i in 1..=liczba / 2 {
+        if liczba % i == 0 {
+            wynik += i;
+        }
+    }
+
+    wynik == liczba
+}
+fn main() {
+    let liczba = 6;
+    if czy_liczba_doskonala(liczba) {
+        println!("liczba: {} jest doskonała", liczba);
+    } else {
+        println!("liczba: {} nie jest doskonała", liczba);
+    }
+}
+
+5/ Napisz funkcję, która wyświetli rozkład podanej liczby na czynniki pierwsze.
+
+fn rozklad_na_czynniki_pierwsze(mut liczba: u64) {
+    let mut dzielnik = 2;
+
+    while liczba > 1 {
+        if liczba % dzielnik == 0 {
+            liczba /= dzielnik;
+            print!("{} ", dzielnik);
+        } else {
+            dzielnik += 1;
+        }
+    }
+}
+fn main() {
+    let liczba = 6;
+    rozklad_na_czynniki_pierwsze(liczba);
+}
+
+------------------------------------------------------------------------------------
+wersja z wyświetlaniem w formacie: 6 = 2 * 3
+
+fn rozklad_na_czynniki_pierwsze(mut liczba: u64) -> String {
+    let mut dzielnik = 2;
+    let mut wynik = String::new();
+    let mut pierwsza = true; // flaga żeby uniknąć pierwszego separatora
+
+    while liczba > 1 {
+        while liczba % dzielnik == 0 {
+            if !pierwsza {
+                wynik.push_str(" * "); // separator przed kolejnym czynnikiem
+            }
+            wynik.push_str(&dzielnik.to_string()); // czynnik jako string
+            liczba /= dzielnik;
+            pierwsza = false;
+        }
+        dzielnik += 1;
+    }
+
+    wynik // wynik jako String
+}
+
+fn main() {
+    let liczba = 6;
+    println!("{} = {}", liczba, rozklad_na_czynniki_pierwsze(liczba));
+}
+
+6/ Napisz funkcję pow_mod(x: u128, n: u128, p: u128) -> u128 która obliczy (xn)%p
+ w taki sposób, by działało to prawidłowo dla jak największych danych.
+
+    - Wskazówka 1: skorzystaj z własności reszty z dzielenia dla iloczynu (czy też inaczej: iloczynu modulo).
+    - Wskazówka 2: w celu ewentualnej optymalizacji czasowej użyj algorytmu szybkiego potęgowania.
+
+// x	n	p	    Oczekiwany wynik (xⁿ) % p
+// 2	10	1000	    24
+// 3	7	13	        3
+// 5	3	13	        8
+// 4	4	9	        4
+// 10	5	17	        6
+
+fn pow_mod(x: u128, n: u128, p: u128) -> u128 {
+    if n == 0 {
+        return 1;
+    }
+    if n % 2 == 0 {
+        let a = pow_mod(x, n/2, p);
+        (a * a) % p
+    } else {
+        (x % p * pow_mod(x, n-1, p)) % p
+    }
+}
+fn main() {
+    let x = 2;
+    let n = 10;
+    let p = 1000;
+
+    println!("{}", pow_mod(x, n, p));
+}
