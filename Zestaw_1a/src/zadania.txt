@@ -1,0 +1,169 @@
+1. Napisz program, który wyświetla informację o przestępności danego roku.
+
+fn main() {
+    let rok: i32 = 2000;
+
+    if rok % 4 == 0 || (rok % 100 != 0 && rok % 400 == 0) {
+        println!("rok przestepczy");
+    }
+    else {
+        println!("rok nie przestepczy");
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Napisz program, który wyświetla liczbę dni miesiąca na podstawie jego numeru i numeru roku.
+
+fn main() {
+    let rok = 2024;
+    let numer_miesiaca = 2;
+
+    if numer_miesiaca == 4 || numer_miesiaca == 6 || numer_miesiaca == 9 || numer_miesiaca == 11 {
+        println!("Miesiac {numer_miesiaca} w roku {rok} ma 30 dni");
+    } else if numer_miesiaca == 2 {
+            if rok % 4 == 0 || (rok % 100 != 0 && rok % 400 == 0) {
+                // println!("rok przestepczy");
+                println!("Miesiac {numer_miesiaca} w roku {rok} ma 29 dni");
+            }
+            else {
+                // println!("rok nie przestepczy");
+                println!("Miesiac {numer_miesiaca} w roku {rok} ma 28 dni");
+            }
+    } else {
+        println!("Miesiac {numer_miesiaca} w roku {rok} ma 31 dni");
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Napisz program służący do konwersji wartości temperatury podanej w stopniach Celsjusza na stopnie w skali Fahrenheita
+    F = 32 + (9/5) * C
+
+fn main() {
+    let celsjusz: f32;
+    celsjusz = 10.0;
+    let fahrenheit: f32;
+    fahrenheit = 32.0+9.0/5.0*celsjusz;
+
+    println!("{fahrenheit}");
+}
+
+lub
+
+let celsjusz: f32 = 10.0; // Przykładowa wartość temperatury w Celsjuszach
+let fahrenheit: f32 = 32.0 + (9.0 / 5.0) * celsjusz;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. I odwrotnie.
+
+fn main() {
+    let fahrenheit: f32 = 32.0;
+    let celsjusz: f32 = (fahrenheit-32.0)*5.0/9.0;
+
+    println!("{celsjusz}");
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Napisz program, który dla danych dwóch poprawnych pór jednej doby (w postaci całkowitych godzin, minut i sekund) wyświetla różnicę czasów (także w postaci analogicznej trójki, z minutami i sekundami w przedziale [0;59]).
+
+fn main() {
+    let godziny1 = 7;
+    let minuty1= 16;
+    let sekundy1 = 50;
+
+    let czas1 = godziny1 * 3600 + minuty1 * 60 + sekundy1;
+
+    let godziny2 = 6;
+    let minuty2 = 59;
+    let sekundy2 = 02;
+
+    let czas2 = godziny2 * 3600 + minuty2 * 60 + sekundy2;
+
+    let mut roznica = czas1 - czas2;
+
+    let godziny_wynik = roznica / 3600;
+    roznica %= 3600;
+    let minuty_wynik = roznica / 60;
+    roznica %= 60;
+    let sekundy_wynik = roznica % 60;
+
+    println!("{godziny_wynik}:{minuty_wynik}:{sekundy_wynik}");
+}
+
+/*
+    7:16:50
+    6:59:02
+
+    0:17:18
+
+    wszystko na sekundy obliczyć wynik i zamienić na godziny minuty i sekundy
+*/
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Napisz program, który oblicza silnię dla danej liczby.
+
+fn main() {
+    let mut liczba: i32 = 5;
+    let mut wynik: i32 = 1;
+
+    while liczba != 0 {
+        wynik = wynik * liczba;
+        liczba -= 1;
+    }
+
+    println!("{wynik}");
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. Napisz program, który wyświetla cyfry danej liczby całkowitej (od końca).
+
+fn main() {
+    let mut liczba = 12345;
+
+    while liczba != 0 {
+        let cyfra = liczba % 10;
+        print!("{cyfra}");
+        liczba /= 10;
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. Napisz program, który oblicza sumę cyfry danej liczby całkowitej.
+
+fn main() {
+    let mut liczba = 12345;
+    let mut suma = 0;
+
+    while liczba != 0 {
+        let cyfra = liczba % 10;
+        suma += cyfra;
+        liczba /= 10;
+    }
+
+    println!("{suma}");
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+9. Napisz program, który znajduje wszystkie trójki pitagorejskie o wartościach nie większych niż dana.
+    Zakładamy, że 0 < a < b < c.
+
+fn main() {
+    let dana = 30;
+
+    for c in 1..=dana {
+        for b in 1..c {
+            for a in 1..b {
+                if a*a + b*b == c*c {
+                    println!("({a}, {b}, {c})");
+                }
+            }
+        }
+    }
+}
