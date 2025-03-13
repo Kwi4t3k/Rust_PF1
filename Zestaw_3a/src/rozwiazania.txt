@@ -1,0 +1,136 @@
+1. Napisz funkcję dwuargumentową, która zamieni wartości podanych w argumentach zmiennych (dla ustalenia uwagi: typu i32).
+
+fn swap(x: &mut i32, y: &mut i32) {
+    let pom = *x;
+    *x = *y;
+    *y = pom;
+}
+
+fn main(){
+    let mut a = 10;
+    let mut b = 20;
+    println!("stare: {a}, {b}");
+    swap(&mut a, &mut b);
+    println!("nowe: {a}, {b}");
+}
+
+2. Napisz funkcję trójargumentową, która poprzestawia wartości swoich argumentów (dla ustalenia uwagi: typu i32) tak, by były uporządkowane niemalejąco. 
+
+fn swap(x: &mut i32, y: &mut i32) {
+    let pom = *x;
+    *x = *y;
+    *y = pom;
+}
+
+fn sort(a: &mut i32, b: &mut i32, c: &mut i32) {
+    if a > b {
+        swap(a, b);
+    }
+    if b > c {
+        swap(b, c);
+    }
+    if a > b {
+        swap(a, b);
+    }
+}
+
+fn main(){
+    let mut a = 15;
+    let mut b = 20;
+    let mut c = 10;
+    println!("stare: {a}, {b}, {c}");
+    sort(&mut a, &mut b, &mut c);
+    println!("nowe: {a}, {b}, {c}");
+}
+
+3. Stwórz generator liczb pseudolosowych, którego ziarno przechowywane będzie na zewnątrz i podawane w pierwszym parametrze, a w parametrze drugim i trzecim podawany będzie przedział losowanych liczb.
+
+fn rand(seed: &mut ..., min_rand: ..., max_rand: ...) -> ...
+
+Każde losowanie oczywiście zmienia też ziarno.
+Możesz wybrać któryś z: https://en.wikipedia.org/wiki/Linear_congruential_generator
+
+1/ zmień ziarno
+2/ zwróć ziarno % (max_rand - min_rand + 1) + min_rand
+
+fn random(seed: &mut usize, min_rand: usize, max_rand: usize) -> usize {
+    // *seed = seed.wrapping_mul(134775813).wrapping_add(1); // bezpieczniejsza wersja
+    *seed = (*seed * 134775813 + 1) % 4294967296;
+    *seed % (max_rand - min_rand + 1) + min_rand
+}
+
+fn main(){
+    let mut a: usize = 10;
+    let b: usize = 15;
+    let c: usize = 30;
+    
+    println!("{}", random(&mut a, b, c));
+    println!("{}", random(&mut a, b, c));
+    println!("{}", random(&mut a, b, c));
+    println!("{}", random(&mut a, b, c));
+}
+
+4. Napisz funkcję
+
+swap_arr(arr: ..., i: usize, j: usize)
+
+która zamieni wartości dwóch podanych elementów pewnej tablicy. 
+
+fn swap_arr(arr: &mut [i32], i: usize, j: usize) {
+    let pom = arr[i];
+    arr[i] = arr[j];
+    arr[j] = pom;
+}
+
+fn main(){
+    let mut arr = [1, 4, 90, 34];
+
+    swap_arr(&mut arr, 1, 2);
+
+    for i in 0..arr.len() {
+        print!("{} ", arr[i]);
+    }
+
+    // print!("{:?}", arr);
+}
+
+5. Stwórz funkcję
+
+rand_perm(arr: ..., seed: ...)
+
+permutującą w miejscu w sposób losowy wartości tablicy przekazanej w argumencie.
+Uwaga: Ta funkcja ma korzystać z dwóch poprzednich. 
+
+fn swap_arr(arr: &mut [i32], i: usize, j: usize) {
+    let pom = arr[i];
+    arr[i] = arr[j];
+    arr[j] = pom;
+}
+
+fn random(seed: &mut usize, min_rand: usize, max_rand: usize) -> usize {
+    *seed = (*seed * 134775813 + 1) % 4294967296;
+    *seed % (max_rand - min_rand + 1) + min_rand
+}
+
+fn rand_perm(arr: &mut [i32], seed: &mut usize) {
+    let n = arr.len();
+    for i in 0..n {
+        let j = random(seed, 0, n-1);
+        swap_arr(arr, i, j);
+    }
+}
+
+/* fn rand_perm(arr: &mut [i32], seed: &mut usize) {
+    let n = arr.len();
+    for i in (1..n).rev() { // ✅ Iteracja od końca
+        let j = random(seed, 0, i); // ✅ Losujemy `j` tylko dla `[0, i]`
+        arr.swap(i, j);
+    }
+} */
+
+fn main(){
+    let mut arr = [1, 4, 90, 34];
+    let mut seed = 10;
+    rand_perm(&mut arr, &mut seed);
+    println!("{:?}", arr);
+}
