@@ -31,4 +31,5 @@ fn main() {
     println!("{}", rzymskie("IX"));  // 9
     println!("{}", rzymskie("XIX")); // 19
     println!("{}", rzymskie("MCMX"));// 1910
+    println!("{}", rzymskie("L")); // 50
 }
