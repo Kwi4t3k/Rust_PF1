@@ -1,0 +1,4 @@
+cargo clippy - kompilator
+cargo fmt - formatowanie
+cargo build
+cargo run
