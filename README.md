@@ -1,3 +1,5 @@
+## <a href="https://github.com/rniedziolkad/rust_25" target="_blank">Repo Niedziółka</a>
+
 # Zadania z zajęć Bezpieczne programowanie w języku Rust PF1
 
 ### Zestawy zadań z zajęć
