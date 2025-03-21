@@ -1,8 +1,8 @@
-1. Napisz funkcję o nagłówku
-
-fn liczba_wystapien(napis: ..., znak: ...) -> ...
-
-która zliczy i zwróci ile jest danych znaków w danym napisie.
+// 1. Napisz funkcję o nagłówku
+//
+// fn liczba_wystapien(napis: ..., znak: ...) -> ...
+//
+// która zliczy i zwróci ile jest danych znaków w danym napisie.
 
 // Definicja funkcji liczba_wystapien, która przyjmuje napis (typ &str) oraz znak (typ char),
 // a zwraca liczbę wystąpień tego znaku jako wartość typu i32
@@ -52,14 +52,13 @@ fn main() {
 
 //--------------------------------------------------------------------------------------------------------------------------------------
 
-2. Napisz funkcję o nagłówku
-   fn rzymskie(napis: ...) -> ...
-   która dla napisu reprezentującego liczbę w zapisie rzymskim (zakładamy jego poprawność) zwraca liczbę reprezentowaną przez ów napis. Przykłady:
-   rzymskie("III") == 3
-   rzymskie("IX") == 9
-   rzymskie("XIX") == 19
-   rzymskie("MCMX") == 1910
-
+// 2. Napisz funkcję o nagłówku
+//    fn rzymskie(napis: ...) -> ...
+//    która dla napisu reprezentującego liczbę w zapisie rzymskim (zakładamy jego poprawność) zwraca liczbę reprezentowaną przez ów napis. Przykłady:
+//    rzymskie("III") == 3
+//    rzymskie("IX") == 9
+//    rzymskie("XIX") == 19
+//    rzymskie("MCMX") == 1910
 
 // Funkcja rzymskie przyjmuje napis (&str) w zapisie rzymskim i zwraca odpowiadającą mu wartość liczbową (u32)
 fn rzymskie(napis: &str) -> u32 {
