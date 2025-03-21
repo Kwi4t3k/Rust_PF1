@@ -4,17 +4,23 @@ fn co_drugi_znak(napis: ...) -> ...
 która zwróci napis zawierający co drugi znak z danego napisu.
 
 fn co_drugi_znak(napis: &str) -> String {
-    let mut wynik = String::new();
+    let mut nowy_napis = String::new(); // nowa tablica dynamiczna Stringów
 
-    for i in napis.chars().step_by(2) {
-        wynik.push(i);
+    for c in napis.chars().step_by(2) { // pętla po znakach z napisu co 2 elementy
+        nowy_napis.push(c); // dodawanie elementów do nowej tablicy
+        // nowy_napis.push(' '); spacja do stringa
     }
+    nowy_napis // zwracanie nowej tablicy
+}
 
-    wynik
+fn co_drugi_znak_v2(napis: &str) -> String {
+    // collect konsumuje iterator i przekształca w odpowiednią kolekcję
+    napis.chars().step_by(2).collect()
 }
 
 fn main() {
-    println!("{}", co_drugi_znak("dogo"))
+    println!("{}", co_drugi_znak("napis")); // n p s
+    println!("{}", co_drugi_znak_v2("napis"));
 }
 
 
