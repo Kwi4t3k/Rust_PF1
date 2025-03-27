@@ -1,0 +1,1 @@
+D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\Zestaw_5b\target\debug\Zestaw_5b.exe: D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\Zestaw_5b\src\main.rs
