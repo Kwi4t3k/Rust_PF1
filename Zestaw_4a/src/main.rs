@@ -1,8 +1,10 @@
+mod rozwiazania;
+
 fn rzymskie(napis: &str) -> u32 {
     let mut suma = 0;
     let mut prev_value = 0;
 
-    for c in napis.chars() {
+    for c in napis.chars().rev() {
         let current_value = match c {
             'I' => 1,
             'V' => 5,
@@ -14,8 +16,8 @@ fn rzymskie(napis: &str) -> u32 {
             _ => 0
         };
 
-        if current_value > prev_value {
-            suma += current_value - 2 * prev_value;
+        if current_value < prev_value {
+            suma -= current_value;
         } else {
             suma += current_value;
         }
@@ -31,5 +33,4 @@ fn main() {
     println!("{}", rzymskie("IX"));  // 9
     println!("{}", rzymskie("XIX")); // 19
     println!("{}", rzymskie("MCMX"));// 1910
-    println!("{}", rzymskie("L")); // 50
 }

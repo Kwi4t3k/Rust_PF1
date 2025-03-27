@@ -1,1 +1,1 @@
-C:\Users\kinga\RustroverProjects\Rust_PF1\Zestaw_4a\target\debug\Zestaw_4a.exe: C:\Users\kinga\RustroverProjects\Rust_PF1\Zestaw_4a\src\main.rs
+D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\Zestaw_4a\target\debug\Zestaw_4a.exe: D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\Zestaw_4a\src\main.rs
