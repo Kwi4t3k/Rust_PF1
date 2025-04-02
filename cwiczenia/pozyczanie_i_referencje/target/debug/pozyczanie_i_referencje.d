@@ -1,0 +1,1 @@
+D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\pozyczanie_i_referencje\target\debug\pozyczanie_i_referencje.exe: D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\pozyczanie_i_referencje\src\main.rs
