@@ -1,0 +1,1 @@
+D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\petle\target\debug\petle.exe: D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\petle\src\main.rs
