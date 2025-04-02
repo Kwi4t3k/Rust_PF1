@@ -1,4 +1,5 @@
 ## <a href="https://github.com/rniedziolkad/rust_25" target="_blank">Repo Niedziółka</a>
+## [Innocenttt3/RustLab](https://github.com/Innocenttt3/RustLab)
 
 # Zadania z zajęć Bezpieczne programowanie w języku Rust PF1
 
@@ -12,3 +13,17 @@
   - [Zestaw 4b](Zestaw_4b)
   - [Zestaw 5a](Zestaw_5a)
   - [Zestaw 5b](Zestaw_5b)
+
+### Dodatkowe ćwiczenia
+- [funkcje](cwiczenia/funkcje/src/main.rs)
+- [typy danych](cwiczenia/typy_danych/src)
+- [wlasność](cwiczenia/wlasnosc/src/main.rs)
+
+
+## Dokumentacja
+https://doc.rust-lang.org/std/index.html
+
+## Użycie
+1. Stwożenie nowego projektu: `cargo new <nazwa_projektu>`
+2. Budowanie projektu: `cargo build`
+3. Uruchomienie projektu: `cargo run`
