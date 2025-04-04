@@ -13,11 +13,14 @@
   - [Zestaw 4b](Zestaw_4b)
   - [Zestaw 5a](Zestaw_5a)
   - [Zestaw 5b](Zestaw_5b)
+  - [Zestaw 6a](Zestaw_6a)
 
 ### Dodatkowe ćwiczenia
 - [funkcje](cwiczenia/funkcje/src/main.rs)
 - [typy danych](cwiczenia/typy_danych/src)
 - [wlasność](cwiczenia/wlasnosc/src/main.rs)
+- [pętle](cwiczenia/petle/src/main.rs)
+- [pożyczanie i referencje](cwiczenia/pozyczanie_i_referencje/src/main.rs)
 
 
 ## Dokumentacja
