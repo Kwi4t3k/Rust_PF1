@@ -1,37 +1,21 @@
-fn iterator(vec: Vec<String>) -> Vec<String> {
-    // Tworzymy nowy wektor, filtrując napisy, które zawierają podwójną literę
-    vec.into_iter()  // Używamy 'into_iter()' aby iterować po wektorze i przekształcić go w iterator
-        .filter(|s| {  // Filtrujemy napisy, sprawdzając każdy z nich
-            // Dla każdego napisu wykonujemy zip, aby łączyć każdy znak z jego następnym
-            s.chars()
-                .zip(s.chars().skip(1))  // 'zip' łączy znak z kolejnym znakiem w napisie
-                .any(|(a, b)| a == b)   // 'any' sprawdza, czy którakolwiek para znaków jest taka sama
-        })
-        .collect()  // Zbieramy wszystkie pasujące napisy do nowego wektora
+fn indeksy_iterator(tablica: Vec<String>, element: &str) -> Vec<usize> {
+    tablica.into_iter()
+        .enumerate()  // Otrzymujemy (index, value)
+        .filter(|(_, x)| x == element)  // Porównujemy wartość z elementem
+        .map(|(i, _)| i)  // Bierzemy tylko indeksy
+        .collect()  // Zbieramy wyniki do wektora
 }
 
-fn petla(vec: Vec<String>) -> Vec<String> {
-    let mut result = Vec::new();
+fn indeksy_petla(tablica: Vec<String>, element: &str) -> Vec<usize> {
+	let mut result = Vec::new();
 
-    // Przechodzimy przez każdy napis w wektorze
-    for s in vec {
-        let mut found_double = false; // Zmienna do sprawdzenia, czy znaleźliśmy podwójną literę
-
-        // Iterujemy po znakach w napisie, zaczynając od drugiego znaku
-        for i in 1..s.len() {
-            if s.chars().nth(i) == s.chars().nth(i - 1) {
-                found_double = true; // Jeśli dwie kolejne litery są takie same, ustawiamy flagę
-                break; // Przerywamy pętlę, bo już znaleźliśmy podwójną literę
-            }
-        }
-
-        // Jeśli znaleźliśmy podwójną literę, dodajemy napis do wyników
-        if found_double {
-            result.push(s);
-        }
-    }
-
-    result
+	for (i, s) in tablica.iter().enumerate() { // `enumerate()` daje dostęp do indeksu i elementu
+		if s == element { // tylko jeśli element jest równy szukanemu napisowi
+			result.push(i);
+		}
+	}
+	
+	result
 }
 
 fn main() {
@@ -61,8 +45,9 @@ fn main() {
 		String::from("xyz"),
 		String::from("foo"),
 		String::from("bar"),
+		String::from("brutto"),
 	];
 
-    println!("{:?}", iterator(test_strings.clone()));
-    println!("{:?}", petla(test_strings));
+    println!("{:?}", indeksy_iterator(test_strings.clone(), "brutto"));
+    println!("{:?}", indeksy_petla(test_strings, "brutto"));
 }
