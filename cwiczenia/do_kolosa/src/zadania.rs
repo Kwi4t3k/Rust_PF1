@@ -227,3 +227,124 @@ fn main() {
     println!("Prefiks (4): {}", najdluzszy_prefiks(&dane4)); // ""
 }
 ---
+
+Oto przykładowe kolokwium z języka Rust, zgodne z podanym zakresem. Składa się z **5 zadań** — każde polega na napisaniu krótkiego programu lub funkcji.
+
+---
+
+### **Zadanie 1. (Pętle, operacje arytmetyczne)**
+Napisz funkcję `fn suma_parzystych(n: u32) -> u32`, która obliczy sumę wszystkich liczb parzystych od 1 do `n` włącznie.
+
+fn suma_parzystych(n: u32) -> u32 {
+    let mut suma = 0;
+    for i in 1..=n {
+        if i % 2 == 0 {
+            suma += i;
+        }
+    }
+    suma
+}
+
+fn main() {
+    let wynik = suma_parzystych(10); // 2 + 4 + 6 + 8 + 10 = 30
+    println!("Suma parzystych: {}", wynik);
+}
+
+---
+
+### **Zadanie 2. (String, str, pożyczki)**
+Napisz funkcję `fn zaczyna_sie_na(napis: &str, litera: char) -> bool`, która sprawdza, czy dany napis zaczyna się od wskazanego znaku.
+
+fn zaczyna_sie_na(napis: &str, litera: char) -> bool {
+    napis.starts_with(litera)
+}
+
+fn main() {
+    println!("{}", zaczyna_sie_na("Ala", 'A'));  // true
+    println!("{}", zaczyna_sie_na("kot", 'k'));  // true
+    println!("{}", zaczyna_sie_na("pies", 'z')); // false
+}
+
+---
+
+### **Zadanie 3. (Vec, tablice, mutowalność)**
+Napisz funkcję `fn podwoj_wartosci(tablica: &mut Vec<i32>)`, która podwaja każdą wartość w podanej tablicy (zmienia oryginalną tablicę).
+
+fn podwoj_wartosci(tablica: &mut Vec<i32>) {
+    for i in 0..tablica.len() {
+        tablica[i] *= 2;
+    }
+}
+
+fn podwoj_wartosci(tablica: &mut Vec<i32>) {
+    for x in tablica.iter_mut() {
+        *x *= 2;
+    }
+}
+
+// fn podwoj_wartosci(tablica: &Vec<i32>) -> Vec<i32> {
+//     tablica.iter().map(|x| x * 2).collect()
+// }
+
+fn main() {
+    let mut liczby = vec![1, 2, 3, 4];
+    podwoj_wartosci(&mut liczby);
+    println!("{:?}", liczby); // [2, 4, 6, 8]
+}
+
+---
+
+### **Zadanie 4. (Pętle, ify, używanie zmiennych)**
+Napisz funkcję `fn podzielne_przez_3(tablica: &[i32]) -> Vec<i32>`, która zwraca nowy wektor zawierający tylko te liczby z podanej tablicy, które są podzielne przez 3.
+
+fn podzielne_przez_3(tablica: &[i32]) -> Vec<i32> {
+    let mut tab = Vec::new();
+
+    for i in 0..tablica.len() {
+        if tablica[i] % 3 == 0 {
+            tab.push(tablica[i]);
+        }
+    }
+
+    tab
+}
+
+fn podzielne_przez_3(tablica: &[i32]) -> Vec<i32> {
+    tablica
+        .iter()
+        .filter(|x| **x % 3 == 0) // odpakowanie podwójnej referencji
+        .map(|x| *x)              // zamiana &i32 na i32
+        .collect()
+}
+
+fn main() {
+    let dane = vec![1, 3, 5, 6, 9, 10, 12];
+    let wynik = podzielne_przez_3(&dane);
+    println!("{:?}", wynik); // [3, 6, 9, 12]
+}
+
+---
+
+### **Zadanie 5. (Funkcje, str, String)**
+Napisz funkcję `fn odwroc_napis(napis: &str) -> String`, która zwróci napis z odwróconą kolejnością znaków.
+
+
+fn odwroc_napis(napis: &str) -> String {
+    napis.chars().rev().collect()
+}
+
+fn odwroc_napis(napis: &str) -> String {
+    let mut result = String::new();
+
+    for i in napis.chars().rev() {
+        result.push_str(&i.to_string())
+    }
+
+    result
+}
+
+fn main() {
+    println!("{}", odwroc_napis("Rust"));       // tsuR
+    println!("{}", odwroc_napis("programowanie")); // einawomargorp
+}
+---
