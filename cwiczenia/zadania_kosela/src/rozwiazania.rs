@@ -240,6 +240,26 @@ zlicz_wiele(&vec![1, 2, 1, 3], &vec![1, 2, 2]) == 4
 zlicz_wiele(&vec![1, 2, 1, 3], &vec![1, 2, 2, 1]) == 6
 ```
 
+fn zlicz_wiele(s1: &Vec<usize>, s2: &Vec<usize>) -> usize {
+    let mut counter = 0;
+
+    for i in 0..s1.len() {
+        for j in 0..s2.len() {
+            if s1[i] == s2[j] {
+                counter += 1;
+            }
+        }
+    }
+
+    counter
+}
+
+fn main() {
+    println!("{:?}", zlicz_wiele(&vec![1, 2, 1, 3], &vec![1, 2]));
+    println!("{:?}", zlicz_wiele(&vec![1, 2, 1, 3], &vec![12]));
+    println!("{:?}", zlicz_wiele(&vec![1, 2, 1, 3], &vec![1, 2, 2]));
+    println!("{:?}", zlicz_wiele(&vec![1, 2, 1, 3], &vec![1, 2, 2, 1]));
+}
 
 
 ### Napisy
