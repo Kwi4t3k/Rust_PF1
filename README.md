@@ -24,6 +24,8 @@
 
 
 ## Dokumentacja
+`rustup docs`
+
 https://doc.rust-lang.org/std/index.html
 
 ## Użycie
