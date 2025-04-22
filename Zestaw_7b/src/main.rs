@@ -1,6 +1,3 @@
-use std::ptr::{dangling, null};
-
-// #[derive(PartialEq)]
 struct Matrix {
     wysokosc: f64,
     szerokosc: f64,
