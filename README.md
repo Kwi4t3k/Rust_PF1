@@ -18,6 +18,9 @@
   - [Zestaw 7b](Zestaw_7b)
   - [Zestaw 8a](Zestaw_8a)
   - [Zestaw 8b](Zestaw_8b)
+  - [Zestaw 9a](Zestaw_9a)
+  - [Zestaw 9b](Zestaw_9b)
+  - [Zestaw 10a](Zestaw_10a)
 
 ### Dodatkowe ćwiczenia
 - [funkcje](cwiczenia/funkcje/src/main.rs)
