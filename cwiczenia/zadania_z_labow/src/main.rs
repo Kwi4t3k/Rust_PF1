@@ -1,125 +1,278 @@
-#[derive(PartialEq, Debug, Clone)]
-enum Jednostka {
-    Sztuki,
-    Litry,
-    Kilogramy,
+// Definicja wyliczenia Month z możliwością debugowania i porównywania
+#[derive(Debug, PartialEq, PartialOrd)]
+enum Month {
+    Styczen,    // 0: styczeń
+    Luty,       // 1: luty
+    Marzec,     // 2: marzec
+    Kwiecien,   // 3: kwiecień
+    Maj,        // 4: maj
+    Czerwiec,   // 5: czerwiec
+    Lipiec,     // 6: lipiec
+    Sierpien,   // 7: sierpień
+    Wrzesien,   // 8: wrzesień
+    Pazdziernik,// 9: październik
+    Listopad,   // 10: listopad
+    Grudzien,   // 11: grudzień
 }
 
-#[derive(Debug, PartialEq, Clone)]
-enum Warunki {
-    Zamrazarka,
-    Chlodziarka,
-    Normalne,
+// Struktura Date przechowująca dzień, miesiąc, rok oraz opcjonalny czas
+struct Date {
+    day: u8,             // numer dnia [1..31]
+    month: Month,        // miesiąc jako enum Month
+    year: u16,           // rok, np. 2025
+    time: Option<Time>,  // opcjonalny czas dania (None = brak czasu)
 }
 
-#[derive(Debug, Clone)]
-struct Towar {
-    opis: String,
-    jednostka: Jednostka,
-    waga_jednostkowa_w_kilogramach: f64,
-    warunki_przechowywania: Warunki,
-}
-
-impl Towar {
-    fn new(
-        opis: String,
-        jednostka: Jednostka,
-        mut waga_jednostkowa_w_kilogramach: f64,
-        warunki_przechowywania: Warunki,
-    ) -> Self {
-        if waga_jednostkowa_w_kilogramach < 0.0 {
-            waga_jednostkowa_w_kilogramach = 0.0;
+impl Date {
+    /// Tworzy napis w formacie "DD-Month-YYYY [HH:MM:SS]" lub bez czasu
+    fn to_string(&self) -> String {
+        // najpierw tworzymy część daty "DD-Month-YYYY"
+        let date = format!("{:02}-{:?}-{}", self.day, self.month, self.year);
+        // jeżeli mamy ustawiony czas, doklejamy spację i czas
+        if self.has_time() {
+            return format!(
+                "{} {}", 
+                date, 
+                self.time.as_ref().unwrap().to_string() // unwrap bezpieczny, bo has_time()==true
+            );
         }
+        // w przeciwnym razie zwracamy tylko datę
+        date
+    }
 
-        if jednostka == Jednostka::Kilogramy {
-            waga_jednostkowa_w_kilogramach = 1.0
+    /// Zwraca true jeśli opcjonalny czas jest Some(_)
+    fn has_time(&self) -> bool {
+        match self.time {
+            None    => false,  // brak czasu
+            Some(_) => true,   // czas jest ustawiony
         }
+    }
 
+    /// Ustawia czas w obiekcie Date (zastępuje poprzedni)
+    fn set_time(&mut self, time: Time) {
+        self.time = Some(time);
+    }
+
+    /// Usuwa czas, zostawiając tylko datę
+    fn clear_time(&mut self) {
+        self.time = None;
+    }
+
+    /// Konstruktor z 3 argumentów day, month, year – time = None
+    fn from_3(day: u8, month: Month, year: u16) -> Self {
+        Self { day, month, year, time: None }
+    }
+
+    /// Parsuje z napisu "DD<delim>MM<delim>YYYY", miesiąc po polsku bez diakrytyków
+    fn from_string(string: &str, delim: char) -> Self {
+        // dzielenie napisu zgodnie z delim
+        let parts: Vec<&str> = string.split(delim).collect();
+        // parsowanie dnia, unwrap dopuszcza panic w razie błędu
+        let day = parts[0].parse().unwrap();
+        // dopasowanie napisu do wariantu Month
+        let month: Month = match parts[1].to_lowercase().as_str() {
+            "styczen"    => Month::Styczen,
+            "luty"       => Month::Luty,
+            "marzec"     => Month::Marzec,
+            "kwiecien"   => Month::Kwiecien,
+            "maj"        => Month::Maj,
+            "czerwiec"   => Month::Czerwiec,
+            "lipiec"     => Month::Lipiec,
+            "sierpien"   => Month::Sierpien,
+            "wrzesien"   => Month::Wrzesien,
+            "pazdziernik"=> Month::Pazdziernik,
+            "listopad"   => Month::Listopad,
+            "grudzien"   => Month::Grudzien,
+            _            => panic!("Nieprawidłowy miesiąc")
+        };
+        // parsowanie roku
+        let year: u16 = parts[2].parse().unwrap();
+        // budujemy instancję
+        Self { day, month, year, time: None }
+    }
+}
+
+// Struktura Time przechowująca godzinę, minutę i sekundę
+struct Time {
+    hour: u8,    // godzina [0..23]
+    minute: u8,  // minuta [0..59]
+    second: u8,  // sekunda [0..59]
+}
+
+impl Time {
+    /// Formatuje czas jako "HH:MM:SS" z zerami wiodącymi
+    fn to_string(&self) -> String {
+        format!("{:02}:{:02}:{:02}", self.hour, self.minute, self.second)
+    }
+
+    /// Konstruktor z 3 liczb hour, minute, second
+    fn from_3(hour: u8, minute: u8, second: u8) -> Self {
+        Self { hour, minute, second }
+    }
+
+    /// Parsuje z napisu "HH:MM:SS", zakładamy poprawny format
+    fn from_string(string: &str) -> Self {
+        let parts: Vec<&str> = string.split(':').collect();
+        let hour   = parts[0].parse().unwrap();
+        let minute = parts[1].parse().unwrap();
+        let second = parts[2].parse().unwrap();
+        Self { hour, minute, second }
+    }
+}
+
+// Ręczna implementacja porównywania Date (rok > miesiąc > dzień > czas)
+impl PartialEq for Date {
+    fn eq(&self, other: &Self) -> bool {
+        self.day   == other.day &&
+        self.month == other.month &&
+        self.year  == other.year &&
+        self.time  == other.time
+    }
+}
+impl Eq for Date {} // Date spełnia Eq bo PartialEq jest totalne
+
+impl PartialOrd for Date {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        // porównaj najpierw rok
+        match self.year.partial_cmp(&other.year) {
+            Some(std::cmp::Ordering::Equal) => {},
+            ord => return ord,
+        }
+        // jeżeli rok równy, porównaj miesiąc
+        match self.month.partial_cmp(&other.month) {
+            Some(std::cmp::Ordering::Equal) => {},
+            ord => return ord,
+        }
+        // jeżeli miesiąc równy, porównaj dzień
+        match self.day.partial_cmp(&other.day) {
+            Some(std::cmp::Ordering::Equal) => {},
+            ord => return ord,
+        }
+        // na końcu porównaj Option<Time> (None < Some, a potem wewnętrzny cmp)
+        self.time.partial_cmp(&other.time)
+    }
+}
+impl Ord for Date {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.partial_cmp(other).unwrap()
+    }
+}
+
+// Ręczna implementacja porównywania Time (hour > minute > second)
+impl PartialEq for Time {
+    fn eq(&self, other: &Self) -> bool {
+        self.hour   == other.hour &&
+        self.minute == other.minute &&
+        self.second == other.second
+    }
+}
+impl Eq for Time {} // Time to Eq
+impl PartialOrd for Time {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        match self.hour.partial_cmp(&other.hour) {
+            Some(std::cmp::Ordering::Equal) => {},
+            ord => return ord,
+        }
+        match self.minute.partial_cmp(&other.minute) {
+            Some(std::cmp::Ordering::Equal) => {},
+            ord => return ord,
+        }
+        self.second.partial_cmp(&other.second)
+    }
+}
+impl Ord for Time {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.partial_cmp(other).unwrap()
+    }
+}
+
+// Priorytety zadań: Low < Medium < High
+#[derive(PartialEq, PartialOrd)]
+enum Priority {
+    Low,    // niski priorytet
+    Medium, // średni priorytet
+    High,   // wysoki priorytet
+}
+
+// Struktura Task łącząca nazwę, opis, priorytet i termin (Date)
+#[derive(PartialEq)]
+struct Task {
+    name: String,      // nazwa zadania
+    description: String,// opis zadania
+    priority: Priority,// priorytet
+    due: Date,         // termin wykonania
+}
+
+impl Task {
+    /// Konstruktor z 4 argumentów: name, description, priority, due
+    fn from_4(name: &str, description: &str, priority: Priority, due: Date) -> Self {
         Self {
-            opis,
-            jednostka,
-            waga_jednostkowa_w_kilogramach,
-            warunki_przechowywania,
+            name: name.to_string(),
+            description: description.to_string(),
+            priority,
+            due,
         }
     }
 }
 
-struct Pozycja {
-    towar: Towar,
-    ilosc: f64,
-}
-
-struct Zamowienie {
-    towary: Vec<Pozycja>,
-}
-
-impl Zamowienie {
-    fn new() -> Self {
-        Self { towary: Vec::new() }
-    }
-
-    fn waga_zamowienia(&self) -> f64 {
-        let mut waga = 0.0;
-        for pozycja in &self.towary {
-            waga += pozycja.towar.waga_jednostkowa_w_kilogramach * pozycja.ilosc;
+// Porównanie dwóch zadań: najpierw priorytet, potem termin
+impl PartialOrd for Task {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        // jeśli priorytety różne, zwróć wynik porównania priorytetów
+        match self.priority.partial_cmp(&other.priority) {
+            Some(std::cmp::Ordering::Equal) => {},
+            ord => return ord,
         }
-        waga
-    }
-
-    fn waga_zamowienia_przechowywanie(&self, warunki: Warunki) -> f64 {
-        let mut waga = 0.0;
-        for pozycja in &self.towary {
-            if pozycja.towar.warunki_przechowywania == warunki {
-                waga += pozycja.towar.waga_jednostkowa_w_kilogramach * pozycja.ilosc;
-            }
-        }
-        waga
-    }
-    fn dodaj(&mut self, towar: &Towar, mut ilosc: f64) {
-        if ilosc < 0.0 {
-            ilosc = 0.0;
-        }
-
-        for pozycja in &mut self.towary {
-            if pozycja.towar.opis == towar.opis {
-                pozycja.ilosc += ilosc;
-                return;
-            }
-        }
-
-        self.towary.push(
-            Pozycja {
-                towar: towar.clone(),
-                ilosc
-        })
+        // w przeciwnym razie porównaj terminy
+        self.due.partial_cmp(&other.due)
     }
 }
 
 fn main() {
-    let jablko = Towar::new("Jabłko".to_string(), Jednostka::Sztuki, 0.15, Warunki::Normalne);
-    let mleko = Towar::new("Mleko".to_string(), Jednostka::Litry, 1.03, Warunki::Chlodziarka);
-    let lody = Towar::new("Lody".to_string(), Jednostka::Kilogramy, 0.4, Warunki::Zamrazarka);
+    // Tworzymy trzy daty: d1 i d3 z parsingiem, d2 ręcznie
+    let mut date1 = Date::from_string("13-Maj-2025", '-');
+    let mut date2 = Date::from_3(13, Month::Maj, 2025);
+    let mut date3 = Date::from_string("13-Maj-2025", '-');
 
-    // puste zamówienie
-    let mut z = Zamowienie::new();
+    // Sprawdzenie, że month==Maj działa
+    println!("{}", date1.month == Month::Maj);
+    println!("{}", date1.month == date2.month);
 
-    // dodajemy pozycje
-    z.dodaj(&jablko, 12.0); // 12 szt.
-    z.dodaj(&mleko, 3.5); // 3,5 l
-    z.dodaj(&lody, 2.0); // 2 kg
-    z.dodaj(&jablko, 4.0); // +4 szt. (łącznie 16)
+    // Wyświetlenie samej daty (bez czasu)
+    println!("{}", date1.to_string());
+    println!("{}", date2.to_string());
 
-    println!("Całkowita waga koszyka: {:.2} kg", z.waga_zamowienia());
-    println!(
-        " – chłodziarka: {:.2} kg",
-        z.waga_zamowienia_przechowywanie(Warunki::Chlodziarka)
-    );
-    println!(
-        " – zamrażarka: {:.2} kg",
-        z.waga_zamowienia_przechowywanie(Warunki::Zamrazarka)
-    );
-    println!(
-        " – normalne:    {:.2} kg",
-        z.waga_zamowienia_przechowywanie(Warunki::Normalne)
-    );
+    // Ustawienie różnych czasów
+    date1.set_time(Time::from_3(11, 0, 0));        // 11:00:00
+    date2.set_time(Time::from_string("10:59:59")); // 10:59:59
+    date3.set_time(Time::from_string("11:00:01")); // 11:00:01
+
+    // Wyświetlenie dat z czasem
+    println!("{}", date1.to_string());
+    println!("{}", date2.to_string());
+    println!("{}", date3.to_string());
+
+    // Porównania dat z czasu (date1 > date2? date1 < date3?)
+    println!("{}", date1 > date2);
+    println!("{}", date1 < date3);
+
+    // Usuwamy czas z date1 i ponownie porównujemy
+    date1.clear_time();
+    println!("{}", date1.to_string());      // tylko data
+    println!("{}", date1 < date2);         // None < Some(_)
+    println!("{}", date1 < date3);         // None < Some(_)
+
+    // Usuwamy czas z date3, teraz date1==date3 (oba bez czasu)
+    date3.clear_time();
+    println!("{}", date1 == date3);
+
+    // Tworzymy dwa zadania z tymi samymi priorytetami, różnymi terminami
+    let task1 = Task::from_4("t1", "opis1", Priority::High, date1);
+    let task2 = Task::from_4("task2", "opis inny", Priority::High, date3);
+
+    // Sprawdzamy operatory >, <, ==, != dla Task
+    println!("{}", (task1 > task2) == false);
+    println!("{}", (task1 < task2) == false);
+    println!("{}", (task1 == task2) == false);
+    println!("{}", (task1 != task2));
 }
