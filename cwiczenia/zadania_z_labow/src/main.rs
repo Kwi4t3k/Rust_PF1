@@ -1,122 +1,125 @@
-struct Matrix {
-    h: usize, // wysokość
-    w: usize, // szerokość
-    d: Vec<Vec<f64>> // dane
+#[derive(PartialEq, Debug, Clone)]
+enum Jednostka {
+    Sztuki,
+    Litry,
+    Kilogramy,
 }
 
-impl Matrix {
-    fn new(wysokosc: usize, szerokosc: usize, wypelniacz: f64) -> Self {
-        let mut dane = Vec::new();
+#[derive(Debug, PartialEq, Clone)]
+enum Warunki {
+    Zamrazarka,
+    Chlodziarka,
+    Normalne,
+}
 
-        for _ in 0..wysokosc {
-            let mut wiersz = Vec::new();
+#[derive(Debug, Clone)]
+struct Towar {
+    opis: String,
+    jednostka: Jednostka,
+    waga_jednostkowa_w_kilogramach: f64,
+    warunki_przechowywania: Warunki,
+}
 
-            for _ in 0..szerokosc {
-                wiersz.push(wypelniacz);
-            }
-            dane.push(wiersz)
+impl Towar {
+    fn new(
+        opis: String,
+        jednostka: Jednostka,
+        mut waga_jednostkowa_w_kilogramach: f64,
+        warunki_przechowywania: Warunki,
+    ) -> Self {
+        if waga_jednostkowa_w_kilogramach < 0.0 {
+            waga_jednostkowa_w_kilogramach = 0.0;
+        }
+
+        if jednostka == Jednostka::Kilogramy {
+            waga_jednostkowa_w_kilogramach = 1.0
         }
 
         Self {
-            h: wysokosc,
-            w: szerokosc,
-            d: dane,
+            opis,
+            jednostka,
+            waga_jednostkowa_w_kilogramach,
+            warunki_przechowywania,
         }
     }
+}
 
-    fn zerowa(wysokosc: usize, szerokosc: usize) -> Self {
-        Matrix::new(wysokosc, szerokosc, 0.0)
+struct Pozycja {
+    towar: Towar,
+    ilosc: f64,
+}
+
+struct Zamowienie {
+    towary: Vec<Pozycja>,
+}
+
+impl Zamowienie {
+    fn new() -> Self {
+        Self { towary: Vec::new() }
     }
 
-    fn jednostkowa(wysokosc: usize) -> Self {
-        let mut dane = Vec::new();
+    fn waga_zamowienia(&self) -> f64 {
+        let mut waga = 0.0;
+        for pozycja in &self.towary {
+            waga += pozycja.towar.waga_jednostkowa_w_kilogramach * pozycja.ilosc;
+        }
+        waga
+    }
 
-        for i in 0..wysokosc {
-            let mut wiersz = Vec::new();
-
-            for j in 0..wysokosc {
-                if i == j {
-                    wiersz.push(1.0);
-                } else {
-                    wiersz.push(0.0);
-                }
+    fn waga_zamowienia_przechowywanie(&self, warunki: Warunki) -> f64 {
+        let mut waga = 0.0;
+        for pozycja in &self.towary {
+            if pozycja.towar.warunki_przechowywania == warunki {
+                waga += pozycja.towar.waga_jednostkowa_w_kilogramach * pozycja.ilosc;
             }
-            dane.push(wiersz)
+        }
+        waga
+    }
+    fn dodaj(&mut self, towar: &Towar, mut ilosc: f64) {
+        if ilosc < 0.0 {
+            ilosc = 0.0;
         }
 
-        Self {
-            h: wysokosc,
-            w: wysokosc,
-            d: dane,
-        }
-    }
-
-    fn element(&mut self, indeks_wiersza: usize, indeks_kolumny: usize) -> f64 {
-        self.d[indeks_wiersza][indeks_kolumny]
-    }
-
-    fn zmien_element(&mut self, indeks_wiersza: usize, indeks_kolumny: usize, nowa_wartosc: f64) {
-        self.d[indeks_wiersza][indeks_kolumny] = nowa_wartosc
-    }
-
-    fn suma(macierz1: &Matrix, macierz2: &Matrix) -> Option<Matrix> {
-        if macierz1.w == macierz2.w && macierz1.h == macierz2.h {
-            let mut dane = Vec::new();
-
-            for i in 0..macierz1.h {
-                let mut wiersz = Vec::new();
-
-                for j in 0..macierz1.w {
-                    wiersz.push(macierz1.d[i][j] + macierz2.d[i][j]);
-                }
-                dane.push(wiersz)
+        for pozycja in &mut self.towary {
+            if pozycja.towar.opis == towar.opis {
+                pozycja.ilosc += ilosc;
+                return;
             }
-
-            Some(Self {
-                h: macierz1.h,
-                w: macierz1.w,
-                d: dane,
-            })
-        } else {
-            None
         }
-    }
 
-    fn wyswietl(&self) {
-        for i in 0..self.h {
-            for j in 0..self.w {
-                print!("{} ", self.d[i][j]);
-            }
-            println!();
-        }
+        self.towary.push(
+            Pozycja {
+                towar: towar.clone(),
+                ilosc
+        })
     }
 }
 
 fn main() {
-    let mut m1 = Matrix::new(3, 3, 2.0);
-    println!("Macierz m1:");
-    m1.wyswietl();
+    let jablko = Towar::new("Jabłko".to_string(), Jednostka::Sztuki, 0.15, Warunki::Normalne);
+    let mleko = Towar::new("Mleko".to_string(), Jednostka::Litry, 1.03, Warunki::Chlodziarka);
+    let lody = Towar::new("Lody".to_string(), Jednostka::Kilogramy, 0.4, Warunki::Zamrazarka);
 
-    m1.zmien_element(1, 1, 5.0);
-    println!("Po zmianie elementu [1,1]:");
-    m1.wyswietl();
+    // puste zamówienie
+    let mut z = Zamowienie::new();
 
-    let m2 = Matrix::zerowa(3, 3);
-    println!("Macierz zerowa m2:");
-    m2.wyswietl();
+    // dodajemy pozycje
+    z.dodaj(&jablko, 12.0); // 12 szt.
+    z.dodaj(&mleko, 3.5); // 3,5 l
+    z.dodaj(&lody, 2.0); // 2 kg
+    z.dodaj(&jablko, 4.0); // +4 szt. (łącznie 16)
 
-    let m3 = Matrix::jednostkowa(3);
-    println!("Macierz jednostkowa m3:");
-    m3.wyswietl();
-
-    match Matrix::suma(&m1, &m3) {
-        Some(suma) => {
-            println!("Suma m1 + m3:");
-            suma.wyswietl();
-        }
-        None => println!("Macierze mają różne wymiary, nie można zsumować."),
-    }
-
-    let el = m1.element(1, 1);
-    println!("Element [1,1] macierzy m1: {}", el);
+    println!("Całkowita waga koszyka: {:.2} kg", z.waga_zamowienia());
+    println!(
+        " – chłodziarka: {:.2} kg",
+        z.waga_zamowienia_przechowywanie(Warunki::Chlodziarka)
+    );
+    println!(
+        " – zamrażarka: {:.2} kg",
+        z.waga_zamowienia_przechowywanie(Warunki::Zamrazarka)
+    );
+    println!(
+        " – normalne:    {:.2} kg",
+        z.waga_zamowienia_przechowywanie(Warunki::Normalne)
+    );
 }
