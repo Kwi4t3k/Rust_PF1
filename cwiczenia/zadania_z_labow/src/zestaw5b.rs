@@ -1,3 +1,40 @@
+// 1
+
+fn wartosc_cyfry(c: char) -> Result<u8, String> {
+    match c.to_digit(10) {
+        None => Err("To nie jest cyfra dziesiętna".to_string()),
+        Some(d) => Ok(d as u8),
+    }
+
+    c.to_digit(10).map(|d| d as u8).ok_or_else(|| "To nie jest cyfra dziesiętna".to_string())
+}
+
+fn wartosc_cyfry(c: char) -> Result<u8, String> {
+    let d = c.to_digit(10).ok_or_else(|| "To nie jest cyfra dziesiętna".to_string())?;
+
+    Ok(d as u8)
+}
+
+
+fn main() {
+    let testy = ['0', '5', '9', 'a', '/', '7'];
+
+    for &znak in &testy {
+        match wartosc_cyfry(znak) {
+            Ok(w) => println!("'{}' → {}", znak, w),
+            Err(e) => println!("'{}' → Błąd: {}", znak, e),
+        }
+    }
+    // '0' → 0
+    // '5' → 5
+    // '9' → 9
+    // 'a' → Błąd: To nie jest cyfra dziesiętna
+    // '/' → Błąd: To nie jest cyfra dziesiętna
+    // '7' → 7
+}
+
+// 2
+
 /// Zwraca wartość znaku '0'..'9' jako u8 albo Err, gdy to nie cyfra.
 fn wartosc_cyfry(c: char) -> Result<u8, String> {
     c.to_digit(10)
