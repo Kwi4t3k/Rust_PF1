@@ -1,0 +1,1 @@
+D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\kolokwium2024_A\target\debug\kolokwium2024_A.exe: D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\kolokwium2024_A\src\main.rs
