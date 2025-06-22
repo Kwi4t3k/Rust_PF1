@@ -1,0 +1,1 @@
+D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\kolokwium3\z12a\target\debug\z12a.exe: D:\szkola\studia\4\ sem\Bezpieczne\ programowanie\ systemowe\ w\ języku\ Rust\Repo\cwiczenia\kolokwium3\z12a\src\main.rs
